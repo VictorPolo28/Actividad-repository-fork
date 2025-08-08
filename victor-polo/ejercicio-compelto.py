@@ -1,85 +1,98 @@
-"""Crea un programa que permita ingresar varios estudiantes con sus nombres y notas. Por cada uno:
+"""En una sala de videojuegos, se organiza un torneo donde varios jugadores compiten para obtener la mayor cantidad de puntos. Se desea crear un programa en Python que:
 
-Calcula si aprueba o no (nota ≥ 60).
+Permita ingresar el nombre y puntaje (0 a 10000) de varios jugadores.
 
-Asigna una letra de calificación:
+Clasifique a cada jugador en un rango gamer según su puntaje:
 
-Guarda todo en un diccionario anidado.
+9000 o más → Leyenda
 
-Al final, muestra:
+7000 a 8999 → Pro Gamer
 
-Los datos completos de cada estudiante
+5000 a 6999 → Avanzado
 
-El promedio general del grupo
+3000 a 4999 → Casual
 
-Cuántos aprobaron y reprobaron
+Menos de 3000 → Novato
 
-"""
-def clasificar_nota(nota):
-    if nota >= 9:
-        return "S"
-    elif nota >= 8:
-        return "E"
-    elif nota >= 7:
-        return "R"
-    elif nota >= 6:
-        return "B"
+Determine si el jugador es Ganador (puntaje ≥ 5000) o Perdedor (puntaje < 5000).
+
+Guarde todos los datos en un diccionario anidado, donde cada clave sea el nombre del jugador y su valor un subdiccionario con:
+
+puntaje
+
+rango
+
+estado (Ganador/Perdedor)
+
+Al finalizar la entrada de datos, el programa debe mostrar:
+
+Lista completa de jugadores con sus datos.
+
+Promedio general de puntajes.
+
+Cantidad de ganadores y perdedores."""
+
+
+def clasificar_rango(puntaje):
+    if puntaje >= 9000:
+        return "Leyenda"
+    elif puntaje >= 7000:
+        return "Pro Gamer"
+    elif puntaje >= 5000:
+        return "Avanzado"
+    elif puntaje >= 3000:
+        return "Casual"
     else:
-        return "I"
+        return "Novato"
 
-estudiantes = {}
+jugadores = {}
+
 
 while True:
-    nombre = input("Ingrese el  nombre del estudiante, o el numero 1 para salir: ").strip()
-    if nombre.lower() == "1":
+    nombre = input("Ingrese el nombre del jugador (o escriba '1' para salir): ").strip()
+    if nombre == "1":
         break
     
     try:
-        nota =int(input(f"Ingrese lanota del estudiante {nombre}: "))
-
-        if nota < 0  or nota >10:
-            print ("la nota debe estar entre 0 y 10. intente  de nuevo")
+        puntaje = int(input(f"Ingrese el puntaje del jugador {nombre}: "))
+        
+        if puntaje < 0 or puntaje > 10000:
+            print("El puntaje debe estar entre 0 y 10000. Intente de nuevo.")
             continue
     except ValueError:
-        print("La nota debe ser un numero")
+        print("El puntaje debe ser un número.")
         continue
-    letra = clasificar_nota(nota)
-    estado = ""
-    if nota >= 6:
-        estado = "Aprobado"
-    else:
-        estado = "Reprobado"
-
-
-#nombre es  la clave del diccionario "estudiantes" y el valor es un subdiccionarios  con las claves,nota,letra,estado y sus valores
-
-    estudiantes [nombre] ={  
-        "nota": nota,
-        "letra": letra,
+    
+    rango = clasificar_rango(puntaje)
+    estado = "Ganador" if puntaje >= 5000 else "Perdedor"
+    
+    
+    jugadores[nombre] = {
+        "puntaje": puntaje,
+        "rango": rango,
         "estado": estado
     }
 
+# Resultados finales
+print("\nResultados Finales ")
+suma_puntajes = 0
+ganadores = 0
+perdedores = 0
 
-print("\n Resultados Finales:")
-suma = 0
-estudiantesAprobados = 0
-estudiantesReprobados = 0
-
-for nombre, datos in estudiantes.items():
-    print(f"{nombre}  Nota: {datos['nota']} ({datos['letra']}) - {datos['estado']}")
-    suma += datos["nota"]
-    if datos["estado"] == "Aprobado":
-        estudiantesAprobados  += 1
+for nombre, datos in jugadores.items():
+    print(f"{nombre} - Puntaje: {datos['puntaje']} ({datos['rango']}) - {datos['estado']}")
+    suma_puntajes += datos["puntaje"]
+    if datos["estado"] == "Ganador":
+        ganadores += 1
     else:
-        estudiantesReprobados += 1
+        perdedores += 1
 
-total = len(estudiantes)
-if total > 0:
-    promedio = suma / total
-    print(f"\nPromedio general del grupo: {promedio:.2f}")
-    print(f"Total de estudiantes: {total}")
-    print(f"Aprobados: {estudiantesAprobados}")
-    print(f"Reprobados: {estudiantesReprobados}")
+total_jugadores = len(jugadores)
+if total_jugadores > 0:
+    promedio = suma_puntajes / total_jugadores
+    print(f"\nPromedio de puntaje: {promedio:.2f}")
+    print(f"Total de jugadores: {total_jugadores}")
+    print(f"Ganadores: {ganadores}")
+    print(f"Perdedores: {perdedores}")
 else:
-    print("No se ingresaron estudiantes.")
-    
+    print("No se ingresaron jugadores.")
